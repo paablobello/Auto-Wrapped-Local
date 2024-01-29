@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Wrapped</title>
+    <link rel="stylesheet" href="/css/estilo.css"> <!-- Asegúrate de enlazar tu hoja de estilos correctamente -->
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="stats-panel">
+            <% if (topItems && topItems.length > 0) { %>
+                <% topItems.forEach((item, index) => { %>
+                    <div class="stats-item-card">
+                        <img src="<%= item.album ? item.album.images[0].url : item.images[0].url %>" alt="<%= item.name %>" class="stats-image">
+                        <div class="stats-info">
+                            <h4><%= index + 1 %>. <%= item.name %></h4>
+                            <% if (item.artists) { %>
+                                <p><%= item.artists.map(artist => artist.name).join(", ") %></p>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>Selecciona una métrica y rango de tiempo para ver tu Wrapped.</p>
+            <% } %>
+        </div>
+        <div class="options-panel">
+            <div class="card">
+                <h2>Personaliza Tu Wrapped</h2>
+                <form action="/dashboard" method="GET">
+                    <div class="input-group">
+                        <label for="category">Métrica</label>
+                        <select name="category" id="category" class="dropdown">
+                            <option value="tracks">Top Canciones</option>
+                            <option value="artists">Top Artistas</option>
+                            <option value="genres">Top Géneros</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Rango de Tiempo</label>
+                        <div class="toggle-buttons">
+                            <input type="radio" id="short_term" name="time_range" value="short_term" class="sr-only"> <!-- sr-only oculta visualmente el input -->
+                            <label for="short_term" class="btn">Último Mes</label>
+                        
+                            <input type="radio" id="medium_term" name="time_range" value="medium_term" class="sr-only">
+                            <label for="medium_term" class="btn">Últimos 6 Meses</label>
+                        
+                            <input type="radio" id="long_term" name="time_range" value="long_term" class="sr-only">
+                            <label for="long_term" class="btn">Todo el Tiempo</label>
+                        </div>
+                        
+                    </div>
+
+                    <button type="submit" class="submit-btn">Haz tu Wrapped</button>
+                </form>
+            </div>
+            <% if (topItems && topItems.length > 0) { %>
+                <button
+                    class="create-playlist-btn mt-4 bg-spotify-green text-white font-bold py-2 px-4 rounded hover:bg-green-700 hidden"
+                    onclick="">
+                    Crear Playlist
+                </button>
+            <% } %>
+            
+        </div>
+    </div>
+    <script>
+        function createPlaylist() {
+        // Redirige al endpoint del servidor que manejará la creación de la playlist
+        window.location.href = '/create-playlist';
+        }
+    </script>
+</body>
+</html>
